@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block title %}
+Login
+{% endblock %}
+
+{% block body %}
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <br/><br/><br/><br/>
+    <h3><center><li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li></center></h3>
+    {% endfor %}
+</ul>
+{% endif %}
+<body class="login">
+    <div>
+      <div class="login_wrapper">
+        <div class="animate form login_form">
+          <section class="login_content">
+            <form method="post" action="{% url 'log_in:log_in' %}">
+              {% csrf_token %}
+              <h1>Admin Login Form</h1>
+              <div>
+                {% for field in form %}
+                          <label>{{ field.label_tag }} <span class="required">*</span>
+                        </label>
+                          <div>
+                          {{ field }}
+                        </div>
+                          {% endfor %}
+              </div>
+              <div>
+                <button type="submit" class="btn btn-success">Submit</button>
+                <a class="reset_pass" href="{% url 'log_in:password_reset' %}">Lost your password?</a>
+              </div>
+              <div class="clearfix"></div>
+              <div class="separator">
+                <div class="clearfix"></div>
+              </div>
+            </form>
+          </section>
+        </div>
+      </div>
+    </div>
+  </body>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+{% block title %}
+OTP Verification
+{% endblock %}
+{% block body %}
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <br/><br/><br/><br/>
+    <h3><center><li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li></center></h3>
+    {% endfor %}
+</ul>
+{% endif %}
+<body class="login">
+<script>
+// Set the date we're counting down to
+var logintry_time = {{ logintry_time }}
+
+// Update the count down every 1 second
+var x = setInterval(function() {
+
+    // Get todays date and time
+    var now = new Date().getTime();
+    // To load the entry time of otp in database
+    //var logintry_time = new Date("{{ logintry_time }}").getTime()
+
+    // Find the distance between now an the count down date
+    var distance = 60000 + logintry_time - now;// 60000 is 60 milliseconds
+
+    // Time calculations for days, hours, minutes and seconds
+    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    // Output the result in an element with id="demo"
+    document.getElementById("demo").innerHTML = minutes + "m " + seconds + "s ";
+
+    // If the count down is over, write some text
+    if (distance <= 0) {
+        clearInterval(x);
+        window.location.href="{% url 'log_in:log_in' %}";
+    }
+}, 1000);
+</script>
+    <div>
+      <div class="login_wrapper">
+        <div class="animate form login_form">
+          <section class="login_content">
+            <form method="post" action="{% url 'log_in:otp_veri' %}">
+              <h3><centre>Time left : <p id="demo"></p></centre></h3>
+              {% csrf_token %}
+              <h1>Enter valid OTP</h1>
+              <div>
+                <br>
+                {% for field in form %}
+                  {{ field.errors }}
+                    <div>
+                        {{ field }}
+                    </div>
+                {% endfor %}
+              </div>
+              <div>
+                <input type="hidden" name="logintry_time" class="form-control" placeholder="logintry_time" required="" value="{{ logintry_time }}" />
+                <input type="hidden" name="email" class="form-control" placeholder="Email" required="" value="{{ email }}" />
+              </div>
+              <br>
+              <div>
+                <button type="submit" class="btn btn-success">Submit</button>
+                <a class="reset_pass" href="{% url 'log_in:resend_otp' %}">Resend OTP</a>
+              </div>
+              <div class="clearfix"></div>
+              <div class="separator">
+                <div class="clearfix"></div>
+                <br />
+              </div>
+            </form>
+          </section>
+        </div>
+      </div>
+    </div>
+</body>
+{% endblock %}
